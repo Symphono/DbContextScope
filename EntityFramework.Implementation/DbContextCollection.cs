@@ -196,6 +196,72 @@ namespace Numero3.EntityFramework.Implementation
             return c;
         }
 
+        public int Save()
+        {
+            if (_disposed)
+                throw new ObjectDisposedException("DbContextCollection");
+
+            ExceptionDispatchInfo lastError = null;
+            var c = 0;
+
+            foreach (var dbContext in _initializedDbContexts.Values)
+            {
+                try
+                {
+                    if (!_readOnly)
+                    {
+                        c += dbContext.SaveChanges();
+                    }
+                }
+                catch (Exception e)
+                {
+                    lastError = ExceptionDispatchInfo.Capture(e);
+                }
+            }
+
+            if (lastError != null)
+                lastError.Throw(); // Re-throw while maintaining the exception's original stack track
+
+            return c;
+        }
+
+        public Task<int> SaveAsync()
+        {
+            return SaveAsync(CancellationToken.None);
+        }
+
+        public async Task<int> SaveAsync(CancellationToken cancelToken)
+        {
+            if (cancelToken == null)
+                throw new ArgumentNullException("cancelToken");
+            if (_disposed)
+                throw new ObjectDisposedException("DbContextCollection");
+
+            ExceptionDispatchInfo lastError = null;
+
+            var c = 0;
+
+            foreach (var dbContext in _initializedDbContexts.Values)
+            {
+                try
+                {
+                    if (!_readOnly)
+                    {
+                        c += await dbContext.SaveChangesAsync(cancelToken).ConfigureAwait(false);
+                    }
+                }
+                catch (Exception e)
+                {
+                    lastError = ExceptionDispatchInfo.Capture(e);
+                }
+            }
+
+            if (lastError != null)
+                lastError.Throw(); // Re-throw while maintaining the exception's original stack track
+
+            return c;
+        }
+
         public void Rollback()
         {
             if (_disposed)
