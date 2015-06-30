@@ -82,9 +82,12 @@ namespace Numero3.EntityFramework.Implementation
             {
                 c = CommitInternal();
             }
+            else
+            {
+                c = SaveInternal();
+            }
 
             _completed = true;
-
             return c;
         }
 
@@ -109,6 +112,10 @@ namespace Numero3.EntityFramework.Implementation
             {
                 c = await CommitInternalAsync(cancelToken).ConfigureAwait(false);
             }
+            else
+            {
+                c = await SaveInternalAsync(cancelToken).ConfigureAwait(false);
+            }
 
             _completed = true;
             return c;
@@ -122,6 +129,16 @@ namespace Numero3.EntityFramework.Implementation
         private Task<int> CommitInternalAsync(CancellationToken cancelToken)
         {
             return _dbContexts.CommitAsync(cancelToken);
+        }
+
+        private int SaveInternal()
+        {
+            return _dbContexts.Save();
+        }
+
+        private Task<int> SaveInternalAsync(CancellationToken cancelToken)
+        {
+            return _dbContexts.SaveAsync(cancelToken);
         }
 
         private void RollbackInternal()
