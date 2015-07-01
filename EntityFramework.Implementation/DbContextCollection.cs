@@ -85,6 +85,11 @@ namespace Numero3.EntityFramework.Implementation
             return _initializedDbContexts[requestedType]  as TDbContext;
         }
 
+        public IsolationLevel? IsolationLevel
+        {
+            get { return _isolationLevel; }
+        }
+
         public int Commit()
         {
             if (_disposed)
