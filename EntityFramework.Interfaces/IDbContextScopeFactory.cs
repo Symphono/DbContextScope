@@ -28,7 +28,7 @@ namespace Numero3.EntityFramework.Interfaces
         /// is an advanced feature that should be used with great care and only if you fully understand the
         /// implications of doing this.
         /// </summary>
-        IDbContextScope Create(DbContextScopeOption joiningOption = DbContextScopeOption.JoinExisting);
+        IDbContextScope Create(DbContextScopeOption joiningOption = DbContextScopeOption.JoinExisting, IsolationLevel isolationLevel=IsolationLevel.ReadCommitted);
 
         /// <summary>
         /// Creates a new DbContextScope for read-only queries.
@@ -42,7 +42,7 @@ namespace Numero3.EntityFramework.Interfaces
         /// is an advanced feature that should be used with great care and only if you fully understand the
         /// implications of doing this.
         /// </summary>
-        IDbContextReadOnlyScope CreateReadOnly(DbContextScopeOption joiningOption = DbContextScopeOption.JoinExisting);
+        IDbContextReadOnlyScope CreateReadOnly(DbContextScopeOption joiningOption = DbContextScopeOption.JoinExisting, IsolationLevel isolationLevel=IsolationLevel.ReadCommitted);
 
         /// <summary>
         /// Forces the creation of a new ambient DbContextScope (i.e. does not

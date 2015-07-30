@@ -20,20 +20,20 @@ namespace Numero3.EntityFramework.Implementation
             _dbContextFactory = dbContextFactory;
         }
 
-        public IDbContextScope Create(DbContextScopeOption joiningOption = DbContextScopeOption.JoinExisting)
+        public IDbContextScope Create(DbContextScopeOption joiningOption = DbContextScopeOption.JoinExisting, IsolationLevel isolationLevel = IsolationLevel.ReadCommitted)
         {
             return new DbContextScope(
                 joiningOption: joiningOption, 
                 readOnly: false, 
-                isolationLevel: null, 
+                isolationLevel: isolationLevel, 
                 dbContextFactory: _dbContextFactory);
         }
 
-        public IDbContextReadOnlyScope CreateReadOnly(DbContextScopeOption joiningOption = DbContextScopeOption.JoinExisting)
+        public IDbContextReadOnlyScope CreateReadOnly(DbContextScopeOption joiningOption = DbContextScopeOption.JoinExisting, IsolationLevel isolationLevel = IsolationLevel.ReadCommitted)
         {
             return new DbContextReadOnlyScope(
                 joiningOption: joiningOption, 
-                isolationLevel: null, 
+                isolationLevel: isolationLevel, 
                 dbContextFactory: _dbContextFactory);
         }
 

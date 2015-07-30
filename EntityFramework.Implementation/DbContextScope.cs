@@ -41,9 +41,6 @@ namespace Numero3.EntityFramework.Implementation
 
         public DbContextScope(DbContextScopeOption joiningOption, bool readOnly, IsolationLevel? isolationLevel, IDbContextFactory dbContextFactory = null)
         {
-            if (isolationLevel.HasValue && joiningOption == DbContextScopeOption.JoinExisting)
-                throw new ArgumentException("Cannot join an ambient DbContextScope when an explicit database transaction is required. When requiring explicit database transactions to be used (i.e. when the 'isolationLevel' parameter is set), you must not also ask to join the ambient context (i.e. the 'joinAmbient' parameter must be set to false).");
-
             _disposed = false;
             _completed = false;
             _readOnly = readOnly;
@@ -54,6 +51,11 @@ namespace Numero3.EntityFramework.Implementation
                 if (_parentScope._readOnly && !this._readOnly)
                 {
                     throw new InvalidOperationException("Cannot nest a read/write DbContextScope within a read-only DbContextScope.");
+                }
+
+                if(_parentScope.DbContexts.IsolationLevel != isolationLevel)
+                {
+                    throw new InvalidOperationException("Cannot create a child DbContextScope with a different IsolationLevel than it's parent.");
                 }
 
                 _nested = true;

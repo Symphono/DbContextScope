@@ -6,6 +6,7 @@
  * of the MIT license.  See the LICENSE file for details.
  */
 using System;
+using System.Data;
 using System.Data.Entity;
 
 namespace Numero3.EntityFramework.Interfaces
@@ -18,6 +19,11 @@ namespace Numero3.EntityFramework.Interfaces
         /// <summary>
         /// Get or create a DbContext instance of the specified type. 
         /// </summary>
-		TDbContext Get<TDbContext>() where TDbContext : DbContext;
+        TDbContext Get<TDbContext>() where TDbContext : DbContext;
+
+        /// <summary>
+        /// Returns the IsolationLevel used to create transactions for DbContexts in this collection.
+        /// </summary>
+        IsolationLevel? IsolationLevel { get; }
     }
 }
